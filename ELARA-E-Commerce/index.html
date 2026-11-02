@@ -1,0 +1,1656 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>ÉLARA | Timeless Fashion</title>
+    <meta name="description"
+        content="ÉLARA – curated fashion for the modern individual. Sustainable luxury, timeless design, responsible craftsmanship." />
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="Assets/favicon.svg" />
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
+        rel="stylesheet" />
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Custom Styles -->
+     <link rel="stylesheet" href="style.css" />
+    
+</head>
+
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div id="header-root"></div>
+        <!-- Page Content -->
+        <main id="page-content"></main>
+        <!-- Footer -->
+        <div id="footer-root"></div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-msg"></span>
+    </div>
+
+    <script>
+        // ============================================================
+        //  DATA
+        // ============================================================
+        const CATEGORIES = [
+            {
+                id: "women",
+                name: "Women",
+                image:
+                    "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&h=500&fit=crop",
+                count: 42,
+            },
+            {
+                id: "men",
+                name: "Men",
+                image:
+                    "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop",
+                count: 38,
+            },
+            {
+                id: "accessories",
+                name: "Accessories",
+                image:
+                    "https://i.pinimg.com/736x/4b/64/e9/4b64e90e396f04e1e78be1c75e9a81e1.jpg",
+                count: 24,
+            },
+            {
+                id: "shoes",
+                name: "Shoes",
+                image:
+                    "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSyw_ScpW1nDp3HumzyWCIjqaqvkTLd-GrnSHPrARYuzd7htKaZCRZSLKB68wgCLjo1RLpN9LN0LN9wlVRXbbeeDgg8QSL4_6Rr3TB3ozZHdY5PkPX-JQJ_Cg",
+                count: 18,
+            },
+        ];
+
+        const PRODUCTS = [
+            {
+                id: "p1",
+                name: "Urban Drift Oversized Tee",
+                price: 79,
+                orig: null,
+                img: "https://image.hm.com/content/dam/global_campaigns/season_03/men/start-page-assets/wk15/MF05262P06-4x5.jpg?imwidth=1024",
+                rating: 4.6,
+                reviews: 112,
+                cat: "men",
+                desc: "Relaxed oversized cotton t-shirt designed for everyday comfort and street-style appeal."
+            },
+            {
+                id: "p2",
+                name: "Luxe Silk Evening Gown",
+                price: 189,
+                orig: null,
+                img: "https://img105.savana.com/v1/goods-pic/620bc873bf324ee6b8d17157adce2933_w360.webp",
+                rating: 4.8,
+                reviews: 44,
+                cat: "women",
+                desc: "Women Floral Printed Fit & Flare Midi Dress"
+            },
+            {
+                id: "p3",
+                name: "Classic His/Her Watch",
+                price: 189,
+                orig: 249,
+                img: "https://i.pinimg.com/736x/4b/64/e9/4b64e90e396f04e1e78be1c75e9a81e1.jpg",
+                rating: 4.7,
+                reviews: 76,
+                cat: "accessories",
+                desc: "Analog Stylish Pair Watch With Roman Indicess And Mesh Metal Strap"
+            },
+            {
+                id: "p4",
+                name: "StreetFlex Cargo Pants",
+                price: 99,
+                orig: 139,
+                img: "https://image.hm.com/assets/hm/54/9c/549c815e70f93886804a068d8949ee9f115bdc94.jpg?imwidth=1536",
+                rating: 4.5,
+                reviews: 88,
+                cat: "men",
+                desc: "Slim-fit cargo trousers with utility pockets and modern streetwear vibe."
+            },
+            {
+                id: "p5",
+                name: "Chic Bucket Tote",
+                price: 49,
+                orig: 79,
+                img: "https://img105.savana.com/v1/goods-pic/9e693c218345490f8618f5db8fca1fd1_w360.webp",
+                rating: 4.5,
+                reviews: 32,
+                cat: "accessories",
+                desc: "Spacious and stylish tote bag for daily essentials and casual outings."
+            },
+            {
+                id: "p6",
+                name: "Athleisure Zip Jacket",
+                price: 129,
+                orig: null,
+                img: "https://img105.savana.com/v1/goods-pic/388a233f4da84509a5e9c1ec9d038cde_w360.webp",
+                rating: 4.8,
+                reviews: 124,
+                cat: "women",
+                desc: "Lightweight sports jacket with thumbhole sleeves for extra comfort."
+            },
+            {
+                id: "p7",
+                name: "AirComfort Sneakers",
+                price: 199,
+                orig: null,
+                img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSrYfiQd8B_EZp_ctiwwWa6G3lzrG_AcGLEAI0FyJQmik2AuBdKhqd2BhQ5yIWsWh3VUD1x3smZIQMhVikL4-FlvWaEOedpjtRdYvnTmS1bpQKWc8IANuG0",
+                rating: 4.7,
+                reviews: 56,
+                cat: "shoes",
+                desc: "Breathable sneakers designed for long-lasting comfort and active wear."
+            },
+            {
+                id: "p8",
+                name: "Elegant Mini Dress",
+                price: 159,
+                orig: 229,
+                img: "https://m.media-amazon.com/images/I/71iMRJ4gjfL._SY606_.jpg",
+                rating: 4.9,
+                reviews: 203,
+                cat: "women",
+                desc: "Flattering mini dress with a sleek fit, perfect for parties."
+            },
+            {
+                id: "p9",
+                name: "Crystal UV Sunglasses",
+                price: 89,
+                orig: 149,
+                img: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcTuvgzPjuVQ11f3HqyPUGmu9Pj94bKPOOYDuZLeC8hfhKPpwHQZ8sOyXXGgAeQpV8Ol8PKf6csnozZhngRDjxtkiN346OxjIAmQ5a0kDV-QSl3gxL2bygHK",
+                rating: 4.7,
+                reviews: 61,
+                cat: "accessories",
+                desc: "Stylish sunglasses with UV protection for sunny days."
+            },
+            {
+                id: "p10",
+                name: "Slim Heel Sandals",
+                price: 199,
+                orig: null,
+                img: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRP26jNIdbgXGekOc2iMGhIz_yGYyS_Ylq_2N-3y-Hsl2A3_TyJlNtVWvpSyKq5El0FxMNiBJ1S8NrkXlKo7zvSrY9g0Vcec_w32nqv-Sz2o8H4z0bWc9Yi",
+                rating: 4.7,
+                reviews: 56,
+                cat: "shoes",
+                desc: "Elegant slim heels for a classy and modern look."
+            },
+            {
+                id: "p11",
+                name: "Organic Cotton Pants",
+                price: 89,
+                orig: 129,
+                img: "https://m.media-amazon.com/images/I/51qCMa7uFuL._SX679_.jpg",
+                rating: 4.6,
+                reviews: 89,
+                cat: "women",
+                desc: "Soft organic cotton trousers designed for comfort and sustainability."
+            },
+            {
+                id: "p12",
+                name: "Minimal Pendant Necklace",
+                price: 49,
+                orig: 79,
+                img: "https://img105.savana.com/v1/goods-pic/4793d1e69d004ecabc55ff04f5fc233f_w360.webp",
+                rating: 4.5,
+                reviews: 32,
+                cat: "accessories",
+                desc: "Simple geometric pendant necklace for everyday styling."
+            },
+            {
+                id: "p13",
+                name: "Elegant Shoulder Bag",
+                price: 49,
+                orig: 79,
+                img: "https://img105.savana.com/v1/goods-pic/9c9826c8605e4416a6c4b6625bab732a_w360.webp",
+                rating: 4.5,
+                reviews: 32,
+                cat: "accessories",
+                desc: "Compact and stylish shoulder bag for daily essentials."
+            },
+            {
+                id: "p14",
+                name: "Water Drop Earrings",
+                price: 49,
+                orig: 79,
+                img: "https://img105.savana.com/v1/goods-pic/74e72f0aecb8489a92e15bdd336806d5_w360.webp",
+                rating: 4.5,
+                reviews: 32,
+                cat: "accessories",
+                desc: "Elegant drop earrings with a minimal and classy design."
+            },
+            {
+                id: "p15",
+                name: "Rhinestone Ring Set",
+                price: 49,
+                orig: 79,
+                img: "https://img105.savana.com/v1/goods-pic/fe60d70ebafd43cba39c6fe14144c165_w360.webp",
+                rating: 4.5,
+                reviews: 32,
+                cat: "accessories",
+                desc: "Shiny rhinestone rings set for a trendy layered look."
+            },
+            {
+                id: "p16",
+                name: "Wool Blend Coat",
+                price: 249,
+                orig: null,
+                img: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=400&h=500&fit=crop",
+                rating: 4.9,
+                reviews: 78,
+                cat: "women",
+                desc: "Premium wool coat designed for warmth and timeless fashion."
+            },
+            {
+                id: "p17",
+                name: "Loose Fit Printed Tee",
+                price: 79,
+                orig: null,
+                img: "https://image.hm.com/assets/hm/69/63/696305d8dd34bea082ee663db8ba3cea8f7f6db2.jpg?imwidth=1536",
+                rating: 4.5,
+                reviews: 88,
+                cat: "men",
+                desc: "Casual printed t-shirt with relaxed fit and breathable fabric."
+            },
+            {
+                id: "p18",
+                name: "Cooling Summer Shirt",
+                price: 99,
+                orig: 139,
+                img: "https://image.hm.com/assets/hm/86/0f/860fa8ffab0cee035f66f95f25edecc9f59ebf36.jpg?imwidth=1536",
+                rating: 4.5,
+                reviews: 88,
+                cat: "men",
+                desc: "Lightweight shirt designed for maximum airflow and comfort."
+            },
+            {
+                id: "p19",
+                name: "Regular Fit T-Shirt Pack",
+                price: 99,
+                orig: 139,
+                img: "https://image.hm.com/assets/hm/26/7d/267de2dce0e90d90f9866a4164634ce5dafa6837.jpg?imwidth=1536",
+                rating: 4.5,
+                reviews: 88,
+                cat: "men",
+                desc: "Pack of everyday t-shirts made with soft breathable cotton."
+            },
+            {
+                id: "p20",
+                name: "Oversized Cotton Tee",
+                price: 99,
+                orig: 139,
+                img: "https://image.hm.com/content/dam/global_campaigns/season_03/men/mf05262p01/MF05262P01-1-Desktop.jpg?imwidth=1430",
+                rating: 4.5,
+                reviews: 88,
+                cat: "men",
+                desc: "Boxy oversized t-shirt for a relaxed streetwear look."
+            },
+            {
+                id: "p21",
+                name: "Kids Sport Sneakers",
+                price: 229,
+                orig: null,
+                img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTb4SyeM35z70T4znRzAaJsBRFQLt8RQjpe9HsTDZO7pRymvCjBqekHrx1QiSsgHY1nP-Ju0Q43sRyiYoxXU9Lxp5iAnrEZcgPOFIx5ilrF-oJ86mYUxXP1iw",
+                rating: 4.8,
+                reviews: 53,
+                cat: "shoes",
+                desc: "Durable and comfortable sneakers designed for active kids."
+            },
+            {
+                id: "p22",
+                name: "Plus Size Contrast Top",
+                price: 189,
+                orig: 249,
+                img: "https://img105.savana.com/v1/goods-pic/b5f31408f9b543859c969d2851557660_w360.webp",
+                rating: 4.7,
+                reviews: 76,
+                cat: "women",
+                desc: "Stylish plus-size top with contrast design for a flattering fit."
+            },
+            {
+                id: "p23",
+                name: "Urban Street Cap",
+                price: 189,
+                orig: 249,
+                img: "https://i.pinimg.com/1200x/0e/31/30/0e31301d73c5ddccdfc5c908a2453206.jpg",
+                rating: 4.7,
+                reviews: 76,
+                cat: "accessories",
+                desc: "Casual cap with modern design, perfect for daily wear."
+            },
+            {
+                id: "p24",
+                name: "Luxury Men's Watch",
+                price: 189,
+                orig: 249,
+                img: "https://i.pinimg.com/736x/f7/82/6d/f7826d8c3e0c26f9d60bb066160b4d45.jpg",
+                rating: 4.7,
+                reviews: 76,
+                cat: "accessories",
+                desc: "Premium watch crafted with elegance and durability."
+            },
+            {
+                id: "p25",
+                name: "Pointed Toe Boots",
+                price: 199,
+                orig: null,
+                img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRK8unOyAEW9UPC8HPx-Ejo8JFyXUnHvjx1zFTNxg5Wl2Tmf00NF5eIfOtmgvWZU-I6BHhZ8b2R6t--1OxCWEpzUQWLDpEtamYqD3IMJayHuEjhRlBeR3mjZcE",
+                rating: 4.7,
+                reviews: 56,
+                cat: "shoes",
+                desc: "Stylish ankle-length boots with a modern pointed toe design."
+            },
+            {
+                id: "p26",
+                name: "Open Toe Party Heels",
+                price: 199,
+                orig: null,
+                img: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcScvnx89uM8y0JSRehxvfUItwAgB17Ij6wZ8wXnMZQgWH7MklLZzcqHaZMaYM8vwAHUUpxh7aQFnWaN12k69LAZXgMgg_KK-nc-7BbrN8QmUa4hfYSsv688LAc",
+                rating: 4.7,
+                reviews: 56,
+                cat: "shoes",
+                desc: "Trendy open-toe heels perfect for parties and special occasions."
+            },
+            {
+                id: "p27",
+                name: "Colourblocked Sneakers",
+                price: 199,
+                orig: null,
+                img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQ864BLqqxSXwsaP6tsYTsBTAcrvgLUWRR6B69RBX4Zg69o3L-KXubpq7iZcNU0ee-3gv5yltjTMy_x07oMCzUX-EY4zsWIKQzVRH9v-bzh",
+                rating: 4.7,
+                reviews: 56,
+                cat: "shoes",
+                desc: "Trendy sneakers with bold color-block design for a stylish look."
+            }
+        ];
+
+        const SORT_OPTIONS = [
+            "Newest",
+            "Price: Low to High",
+            "Price: High to Low",
+            "Rating",
+        ];
+
+        const JOURNAL_POSTS = [
+            {
+                id: "j1",
+                tag: "Style Guide",
+                title: "Building the Perfect Capsule Wardrobe",
+                excerpt:
+                    "Discover how to build a versatile wardrobe with just 30 carefully curated pieces that work for every occasion.",
+                img: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&h=400&fit=crop",
+                date: "April 5, 2026",
+            },
+            {
+                id: "j2",
+                tag: "Sustainability",
+                title: "Our Commitment to Responsible Fashion",
+                excerpt:
+                    "We explore what sustainable fashion truly means and how ÉLARA is taking concrete steps toward a responsible future.",
+                img: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&h=400&fit=crop",
+                date: "March 28, 2026",
+            },
+            {
+                id: "j3",
+                tag: "Trend Report",
+                title: "Spring 2026: The Textures That Define the Season",
+                excerpt:
+                    "From raw linen to brushed cotton, we break down the defining textures of this season's most coveted pieces.",
+                img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&h=400&fit=crop",
+                date: "March 15, 2026",
+            },
+        ];
+
+        const TEAM = [
+            {
+                name: "Élara Moreau",
+                role: "Founder & Creative Director",
+                img: "https://cdn.prod.website-files.com/6411ed887234f8a63288b30c/687ea0f4c92bf39b49843389_cover%20for%20webpagesblogs%20(1).png",
+            },
+            {
+                name: "James Harlow",
+                role: "Head of Product",
+                img: "https://portraitpal.ai/wp-content/uploads/2024/10/Linkedin-headshot-1536x1024.jpg",
+            },
+            {
+                name: "Mia Chen",
+                role: "Sustainability Lead",
+                img: "https://static.vecteezy.com/system/resources/thumbnails/051/041/957/small/confident-young-businesswoman-smiling-at-camera-in-office-portrait-of-success-photo.jpg",
+            },
+            {
+                name: "Lucas Rivera",
+                role: "Head of Design",
+                img: "https://www.denverheadshotco.com/wp-content/uploads/2023/05/Denver-Headshot-Co-0013-SMALL.jpg",
+            },
+        ];
+
+        // ============================================================
+        //  STATE
+        // ============================================================
+        let route = { page: "home", params: {} };
+        let cart = JSON.parse(localStorage.getItem("elara_cart") || "[]");
+        let wishlist = JSON.parse(localStorage.getItem("elara_wish") || "[]");
+
+        // Header state
+        let menuOpen = false;
+        let searchOpen = false;
+        let searchQ = "";
+
+        // Shop state
+        let shopCat = "";
+        let shopSort = "Newest";
+        let drawerOpen = false;
+
+        // ============================================================
+        //  PERSISTENCE
+        // ============================================================
+        function saveCart() {
+            localStorage.setItem("elara_cart", JSON.stringify(cart));
+        }
+        function saveWish() {
+            localStorage.setItem("elara_wish", JSON.stringify(wishlist));
+        }
+
+        // ============================================================
+        //  UTILITIES
+        // ============================================================
+        function cartCount() {
+            return cart.reduce((s, i) => s + i.qty, 0);
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById("toast");
+            document.getElementById("toast-msg").textContent = msg;
+            t.classList.add("show");
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.remove("show"), 2400);
+        }
+
+        function stars(r) {
+            let s = "";
+            for (let i = 1; i <= 5; i++) {
+                if (i <= Math.floor(r)) s += `<i class="fas fa-star star-icon"></i>`;
+                else if (i - r < 1)
+                    s += `<i class="fas fa-star-half-alt star-icon"></i>`;
+                else s += `<i class="far fa-star star-icon"></i>`;
+            }
+            return s;
+        }
+
+        function inWish(id) {
+            return wishlist.some((p) => p.id === id);
+        }
+
+        function nav(page, params = {}) {
+            route = { page, params };
+            menuOpen = false;
+            searchOpen = false;
+            searchQ = "";
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            render();
+        }
+
+        // ============================================================
+        //  CART / WISH ACTIONS
+        // ============================================================
+        function addToCart(p) {
+            const ex = cart.find((i) => i.id === p.id);
+            if (ex) ex.qty++;
+            else cart.push({ ...p, qty: 1 });
+            saveCart();
+            renderHeader();
+            showToast(`${p.name} added to cart`);
+        }
+
+        function removeCart(id) {
+            cart = cart.filter((i) => i.id !== id);
+            saveCart();
+            renderPage();
+            renderHeader();
+        }
+
+        function setQty(id, q) {
+            if (q <= 0) {
+                removeCart(id);
+                return;
+            }
+            const i = cart.find((i) => i.id === id);
+            if (i) {
+                i.qty = q;
+                saveCart();
+                renderPage();
+            }
+        }
+
+        function toggleWish(p) {
+            if (inWish(p.id)) {
+                wishlist = wishlist.filter((w) => w.id !== p.id);
+                showToast(`Removed from wishlist`);
+            } else {
+                wishlist.push(p);
+                showToast(`${p.name} added to wishlist`);
+            }
+            saveWish();
+            renderPage();
+        }
+
+        // ============================================================
+        //  PRODUCT CARD
+        // ============================================================
+        function productCard(p, gridClass = "") {
+            const sale = p.orig !== null;
+            const wished = inWish(p.id);
+            return `
+      <div class="product-card ${gridClass}">
+        <div class="img-wrap">
+          <img src="${p.img}" class="prod-img" data-nav-product="${p.id}" alt="${p.name}" loading="lazy">
+          ${sale ? '<span class="sale-badge">SALE</span>' : ""}
+          <button class="wish-btn" data-wish="${p.id}">
+            <i class="${wished ? "fas" : "far"} fa-heart" style="font-size:.85rem; color:${wished ? "var(--accent)" : "inherit"}"></i>
+          </button>
+          <div class="hover-cart">
+            <button class="cart-btn" data-addcart="${p.id}">
+              <i class="fas fa-shopping-bag"></i> Add to Cart
+            </button>
+          </div>
+        </div>
+        <div class="prod-info">
+          <div class="prod-title" data-nav-product="${p.id}">${p.name}</div>
+          <div class="rating">${stars(p.rating)}<span class="rating-text">${p.rating} (${p.reviews})</span></div>
+          <div class="price-group">
+            <span class="cur-price">$${p.price}</span>
+            ${sale ? `<span class="old-price">$${p.orig}</span>` : ""}
+          </div>
+        </div>
+        <button class="mobile-cart-btn" data-addcart="${p.id}">
+          <i class="fas fa-shopping-bag"></i> Add to Cart
+        </button>
+      </div>`;
+        }
+
+        // ============================================================
+        //  HEADER RENDER
+        // ============================================================
+        function renderHeader() {
+            const cc = cartCount();
+            const wc = wishlist.length;
+            const pages = [
+                { id: "home", label: "Home" },
+                { id: "shop", label: "Shop" },
+                { id: "about", label: "About" },
+                { id: "journal", label: "Journal" },
+                { id: "contact", label: "Contact" },
+            ];
+
+            const navLinks = pages
+                .map(
+                    (p) => `
+        <span class="nav-link ${route.page === p.id ? "active" : ""}" data-nav="${p.id}">${p.label}</span>
+      `,
+                )
+                .join("");
+
+            const mobileItems = pages
+                .map(
+                    (p) => `
+        <span class="mobile-nav-item ${route.page === p.id ? "active" : ""}" data-nav="${p.id}">${p.label}</span>
+      `,
+                )
+                .join("");
+
+            // Search results
+            const filteredSearch =
+                searchQ.trim().length > 1
+                    ? PRODUCTS.filter((p) =>
+                        p.name.toLowerCase().includes(searchQ.toLowerCase()),
+                    ).slice(0, 5)
+                    : [];
+
+            const searchResultsHtml = searchOpen
+                ? `
+      <div class="search-panel">
+        <div class="search-input-wrap">
+          <i class="fas fa-search search-icon-left"></i>
+          <input id="search-inp" class="search-input" type="text"
+            placeholder="Search products…" value="${searchQ.replace(/"/g, "&quot;")}" autofocus>
+        </div>
+        ${filteredSearch.length > 0
+                    ? `
+        <div class="search-results">
+          ${filteredSearch
+                        .map(
+                            (p) => `
+          <button class="result-item" data-nav-product="${p.id}">
+            <img src="${p.img}" class="result-img" alt="${p.name}">
+            <div>
+              <div class="result-name">${p.name}</div>
+              <div class="result-price">$${p.price}</div>
+            </div>
+          </button>`,
+                        )
+                        .join("")}
+        </div>`
+                    : searchQ.trim().length > 1
+                        ? `
+        <div class="search-results" style="padding:.85rem; text-align:center; color:var(--muted);">
+          No results for "<em>${searchQ}</em>"
+        </div>`
+                        : ""
+                }
+      </div>`
+                : "";
+
+            const mobileMenuHtml = menuOpen
+                ? `
+      <div class="mobile-menu">
+        <div class="mobile-nav-links">
+          ${mobileItems}
+          <div class="mobile-footer-links">
+            <span class="mobile-footer-link" data-nav="wishlist">
+              <i class="far fa-heart"></i> Wishlist ${wc > 0 ? `(${wc})` : ""}
+            </span>
+            <span class="mobile-footer-link" data-nav="cart">
+              <i class="fas fa-shopping-bag"></i> Cart ${cc > 0 ? `(${cc})` : ""}
+            </span>
+          </div>
+        </div>
+      </div>`
+                : "";
+
+            document.getElementById("header-root").innerHTML = `
+      <header class="header-sticky">
+        <div class="announce-bar">
+          Free shipping on orders over $99 &middot; <a href="#" onclick="return false">Shop Now</a>
+        </div>
+        <div class="main-header">
+          <div class="container">
+            <div class="header-flex">
+              <button id="mobile-menu-btn" class="icon-btn lg-hide" style="margin-left:-.5rem;">
+                <i class="fas ${menuOpen ? "fa-times" : "fa-bars"}" style="font-size:1.1rem;"></i>
+              </button>
+              <span class="logo" data-nav="home">ÉLARA</span>
+              <nav class="desktop-nav">${navLinks}</nav>
+              <div class="icons-group">
+                <button id="search-btn" class="icon-btn"><i class="fas fa-search"></i></button>
+                <button class="icon-btn sm-show" data-nav="wishlist" style="position:relative;">
+                  <i class="far fa-heart"></i>
+                  ${wc > 0 ? `<span class="cart-badge">${wc}</span>` : ""}
+                </button>
+                <button class="icon-btn sm-show" data-nav="cart" style="position:relative;">
+                  <i class="fas fa-shopping-bag"></i>
+                  ${cc > 0 ? `<span class="cart-badge">${cc}</span>` : ""}
+                </button>
+                <!-- mobile cart shortcut -->
+                <button class="icon-btn lg-hide" data-nav="cart" style="position:relative;">
+                  <i class="fas fa-shopping-bag"></i>
+                  ${cc > 0 ? `<span class="cart-badge">${cc}</span>` : ""}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        ${searchResultsHtml}
+        ${mobileMenuHtml}
+      </header>`;
+
+            // Events
+            document
+                .getElementById("mobile-menu-btn")
+                ?.addEventListener("click", () => {
+                    menuOpen = !menuOpen;
+                    renderHeader();
+                });
+            document.getElementById("search-btn")?.addEventListener("click", () => {
+                searchOpen = !searchOpen;
+                if (!searchOpen) searchQ = "";
+                renderHeader();
+            });
+            const si = document.getElementById("search-inp");
+            if (si) {
+                si.addEventListener("input", (e) => {
+                    searchQ = e.target.value;
+                    renderHeader();
+                });
+                si.focus();
+            }
+
+            document.querySelectorAll("[data-nav]").forEach((el) => {
+                el.addEventListener("click", () => nav(el.dataset.nav));
+            });
+            document.querySelectorAll("[data-nav-product]").forEach((el) => {
+                el.addEventListener("click", () =>
+                    nav("product", { id: el.dataset.navProduct }),
+                );
+            });
+
+            // Close search on outside click
+            if (searchOpen) {
+                const h = (e) => {
+                    if (
+                        !e.target.closest(".search-panel") &&
+                        !e.target.closest("#search-btn")
+                    ) {
+                        searchOpen = false;
+                        searchQ = "";
+                        renderHeader();
+                        document.removeEventListener("click", h);
+                    }
+                };
+                setTimeout(() => document.addEventListener("click", h), 100);
+            }
+        }
+
+        // ============================================================
+        //  FOOTER RENDER
+        // ============================================================
+        function renderFooter() {
+            document.getElementById("footer-root").innerHTML = `
+      <footer class="footer">
+        <div class="container footer-inner">
+          <div class="footer-grid">
+            <div>
+              <div class="footer-logo">ÉLARA</div>
+              <p class="footer-tagline">Curated fashion for the modern individual. Quality craftsmanship meets timeless design.</p>
+            </div>
+            <div>
+              <div class="footer-col-title">Shop</div>
+              <ul class="footer-links">
+                <li><span data-nav-shop-cat="women">Women</span></li>
+                <li><span data-nav-shop-cat="men">Men</span></li>
+                <li><span data-nav-shop-cat="accessories">Accessories</span></li>
+                <li><span data-nav-shop-cat="shoes">Shoes</span></li>
+              </ul>
+            </div>
+            <div>
+              <div class="footer-col-title">Company</div>
+              <ul class="footer-links">
+                <li><span data-nav="about">About Us</span></li>
+                <li><span data-nav="journal">Journal</span></li>
+                <li><span data-nav="contact">Contact</span></li>
+              </ul>
+            </div>
+            <div>
+              <div class="footer-col-title">Help</div>
+              <ul class="footer-links">
+                <li><a href="#" onclick="return false">Shipping</a></li>
+                <li><a href="#" onclick="return false">Returns</a></li>
+                <li><a href="#" onclick="return false">FAQ</a></li>
+                <li><a href="#" onclick="return false">Size Guide</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-divider">© 2026 ÉLARA. All rights reserved. Timeless elegance, responsible future.</div>
+        </div>
+      </footer>`;
+
+            document.querySelectorAll("[data-nav-shop-cat]").forEach((el) => {
+                el.addEventListener("click", () => {
+                    shopCat = el.dataset.navShopCat;
+                    nav("shop");
+                });
+            });
+            document.querySelectorAll("#footer-root [data-nav]").forEach((el) => {
+                el.addEventListener("click", () => nav(el.dataset.nav));
+            });
+        }
+
+        // ============================================================
+        //  PAGE VIEWS
+        // ============================================================
+
+        // --- HOME ---
+        function pageHome() {
+            return `
+      <section class="hero-section">
+        <div class="container">
+          <div class="hero-grid">
+            <div class="hero-content fade-left">
+              <p class="hero-badge">New Season 2026</p>
+              <h1 class="hero-title">Timeless Style,<br>Modern Craft</h1>
+              <p class="hero-desc">Discover our curated collection of wardrobe essentials designed to last beyond the season — crafted with responsibility.</p>
+              <button class="btn-primary" data-nav="shop">Shop Collection <i class="fas fa-arrow-right"></i></button>
+              <div class="hero-stats">
+                <div><div class="stat-num">1.2k+</div><div class="stat-label">Products</div></div>
+                <div><div class="stat-num">48k+</div><div class="stat-label">Happy Customers</div></div>
+                <div><div class="stat-num">4.9★</div><div class="stat-label">Average Rating</div></div>
+              </div>
+            </div>
+            <div class="hero-image fade-right">
+              <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=700&h=875&fit=crop" alt="ÉLARA Fashion" />
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="container container-pad">
+        <h2 class="section-title">Shop by Category</h2>
+        <div class="categories-grid">
+          ${CATEGORIES.map(
+                (c, i) => `
+          <div class="category-card fade-up delay-${i}" data-shop-cat="${c.id}">
+            <img src="${c.image}" class="category-img" alt="${c.name}">
+            <div class="category-overlay"></div>
+            <div class="category-info">
+              <div class="category-name">${c.name}</div>
+              <div class="category-count">${c.count} products</div>
+            </div>
+          </div>`,
+            ).join("")}
+        </div>
+
+        <div class="section-header" style="margin-top:3.5rem;">
+          <h2>Featured Products</h2>
+          <span class="view-all" data-nav="shop">View All <i class="fas fa-arrow-right"></i></span>
+        </div>
+        <div class="products-grid">
+          ${PRODUCTS.slice(0, 4)
+                    .map((p) => productCard(p))
+                    .join("")}
+        </div>
+
+        <div class="newsletter-banner fade-up">
+          <h2 class="banner-title">Subscribe & Save 15%</h2>
+          <p class="banner-desc">Join our newsletter for exclusive offers, early access, and curated style inspiration.</p>
+          <form id="nl-form" class="newsletter-form">
+            <input type="email" class="nl-input" placeholder="your@email.com" required>
+            <button type="submit" class="btn-accent">Subscribe</button>
+          </form>
+        </div>
+      </div>`;
+        }
+
+        // --- SHOP ---
+        function filteredProducts() {
+            let r = [...PRODUCTS];
+            if (shopCat) r = r.filter((p) => p.cat === shopCat);
+            switch (shopSort) {
+                case "Price: Low to High":
+                    r.sort((a, b) => a.price - b.price);
+                    break;
+                case "Price: High to Low":
+                    r.sort((a, b) => b.price - a.price);
+                    break;
+                case "Rating":
+                    r.sort((a, b) => b.rating - a.rating);
+                    break;
+            }
+            return r;
+        }
+
+        function pageShop() {
+            const fp = filteredProducts();
+            const sidebar = `
+      <aside class="sidebar">
+        <div class="sidebar-sticky">
+          <div class="sb-heading">Categories</div>
+          <ul class="cat-list">
+            <li><button class="cat-btn ${!shopCat ? "active" : ""}" data-shop-cat="">All Products</button></li>
+            ${CATEGORIES.map(
+                (c) => `
+            <li><button class="cat-btn ${shopCat === c.id ? "active" : ""}" data-shop-cat="${c.id}">${c.name} (${c.count})</button></li>`,
+            ).join("")}
+          </ul>
+          <div class="sb-heading" style="margin-top:2rem;">Sort By</div>
+          <ul class="sort-list">
+            ${SORT_OPTIONS.map(
+                (o) => `
+            <li><button class="sort-btn ${shopSort === o ? "active" : ""}" data-sort="${o}">${o}</button></li>`,
+            ).join("")}
+          </ul>
+        </div>
+      </aside>`;
+
+            const drawer = drawerOpen
+                ? `
+      <div class="drawer-overlay" id="drawer-overlay"></div>
+      <div class="drawer">
+        <div class="drawer-header">
+          <div class="drawer-title">Filter & Sort</div>
+          <button class="drawer-close" id="drawer-close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="drawer-section-title">Categories</div>
+        <div class="drawer-cats">
+          <button class="drawer-cat-btn ${!shopCat ? "active" : ""}" data-shop-cat="">All</button>
+          ${CATEGORIES.map(
+                    (c) => `
+          <button class="drawer-cat-btn ${shopCat === c.id ? "active" : ""}" data-shop-cat="${c.id}">${c.name}</button>`,
+                ).join("")}
+        </div>
+        <div class="drawer-section-title">Sort By</div>
+        <div class="drawer-sort-list">
+          ${SORT_OPTIONS.map(
+                    (o) => `
+          <button class="drawer-sort-btn ${shopSort === o ? "active" : ""}" data-sort="${o}">${o}</button>`,
+                ).join("")}
+        </div>
+      </div>`
+                : "";
+
+            return `
+      ${drawer}
+      <div class="page-header">
+        <div class="container">
+          <div class="breadcrumb">
+            <span data-nav="home">Home</span>
+            <span class="bc-sep">/</span>
+            <span>Shop</span>
+            ${shopCat ? `<span class="bc-sep">/</span><span>${CATEGORIES.find((c) => c.id === shopCat)?.name}</span>` : ""}
+          </div>
+          <h1>Shop All</h1>
+          <p>${fp.length} products${shopCat ? " in " + CATEGORIES.find((c) => c.id === shopCat)?.name : ""}</p>
+        </div>
+      </div>
+      <div class="container container-pad">
+        <div class="mobile-filter-bar">
+          <button class="filter-toggle-btn" id="filter-open-btn">
+            <i class="fas fa-sliders-h"></i> Filters
+          </button>
+          <select class="sort-select-mobile" id="mobile-sort-sel">
+            ${SORT_OPTIONS.map((o) => `<option value="${o}" ${shopSort === o ? "selected" : ""}>${o}</option>`).join("")}
+          </select>
+        </div>
+        <div class="shop-layout">
+          ${sidebar}
+          <div class="products-section">
+            <div class="products-count">${fp.length} product${fp.length !== 1 ? "s" : ""} found</div>
+            <div class="shop-products-grid">
+              ${fp.map((p) => productCard(p)).join("")}
+            </div>
+            ${fp.length === 0 ? `<div style="text-align:center; padding:3rem 1rem; color:var(--muted);">No products match your filters.</div>` : ""}
+          </div>
+        </div>
+      </div>`;
+        }
+
+        // --- PRODUCT DETAIL ---
+        function pageProduct() {
+            const p = PRODUCTS.find((x) => x.id === route.params.id);
+            if (!p)
+                return `<div class="container container-pad"><p>Product not found.</p></div>`;
+            const related = PRODUCTS.filter(
+                (x) => x.cat === p.cat && x.id !== p.id,
+            ).slice(0, 4);
+            const wished = inWish(p.id);
+            return `
+      <div class="container container-pad">
+        <span class="pd-go-back" data-nav="shop"><i class="fas fa-arrow-left"></i> Back to Shop</span>
+        <div class="pd-grid">
+          <div>
+            <img src="${p.img}" class="pd-img" alt="${p.name}">
+          </div>
+          <div>
+            <p style="font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;">${CATEGORIES.find((c) => c.id === p.cat)?.name}</p>
+            <h1 class="pd-title">${p.name}</h1>
+            <div class="pd-rating">
+              ${stars(p.rating)}
+              <span class="rating-text" style="font-size:.85rem;">${p.rating} (${p.reviews} reviews)</span>
+            </div>
+            <p class="pd-desc">${p.desc}</p>
+            <div class="pd-price">
+              $${p.price}
+              ${p.orig ? `<span class="old-price" style="font-size:1.1rem; font-weight:400; margin-left:.75rem;">$${p.orig}</span>` : ""}
+            </div>
+            <div class="pd-actions">
+              <button class="btn-primary" data-addcart="${p.id}">
+                <i class="fas fa-shopping-bag"></i> Add to Cart
+              </button>
+              <button class="btn-outline ${wished ? "wished" : ""}" data-wish="${p.id}">
+                <i class="${wished ? "fas" : "far"} fa-heart" ${wished ? 'style="color:var(--accent)"' : ""}></i>
+                ${wished ? "Wishlisted" : "Wishlist"}
+              </button>
+            </div>
+            <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+              <div style="display:flex; gap:1.5rem; flex-wrap:wrap;">
+                <div style="font-size:.82rem; color:var(--muted);">
+                  <i class="fas fa-truck" style="color:var(--accent);margin-right:.4rem;"></i> Free shipping over $99
+                </div>
+                <div style="font-size:.82rem; color:var(--muted);">
+                  <i class="fas fa-undo" style="color:var(--accent);margin-right:.4rem;"></i> 30-day free returns
+                </div>
+                <div style="font-size:.82rem; color:var(--muted);">
+                  <i class="fas fa-leaf" style="color:var(--accent);margin-right:.4rem;"></i> Sustainably made
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        ${related.length > 0
+                    ? `
+        <div class="section-header" style="margin-top:4rem;">
+          <h2>You May Also Like</h2>
+        </div>
+        <div class="products-grid">
+          ${related.map((r) => productCard(r)).join("")}
+        </div>`
+                    : ""
+                }
+      </div>`;
+        }
+
+        // --- CART ---
+        function pageCart() {
+            if (cart.length === 0)
+                return `
+      <div class="container container-pad">
+        <div class="cart-empty">
+          <i class="fas fa-shopping-bag"></i>
+          <h2>Your cart is empty</h2>
+          <p>Looks like you haven't added anything yet. Browse our collection and find something you love.</p>
+          <button class="btn-primary" data-nav="shop">Browse Collection</button>
+        </div>
+      </div>`;
+
+            let subtotal = 0;
+            const items = cart
+                .map((item) => {
+                    const sub = item.price * item.qty;
+                    subtotal += sub;
+                    return `
+        <div class="cart-item">
+          <img src="${item.img}" class="ci-img" alt="${item.name}">
+          <div class="ci-body">
+            <div class="ci-name">${item.name}</div>
+            <div class="ci-price">$${item.price} each</div>
+            <div class="qty-row">
+              <button class="qty-btn" data-qty-down="${item.id}">−</button>
+              <span class="qty-num">${item.qty}</span>
+              <button class="qty-btn" data-qty-up="${item.id}">+</button>
+            </div>
+            <div class="ci-subtotal">Subtotal: $${sub}</div>
+          </div>
+          <button class="ci-remove" data-remove="${item.id}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>`;
+                })
+                .join("");
+
+            const shipping = subtotal >= 99 ? 0 : 12;
+            const total = subtotal + shipping;
+
+            return `
+      <div class="page-header">
+        <div class="container">
+          <h1>Shopping Cart</h1>
+          <p>${cartCount()} item${cartCount() !== 1 ? "s" : ""} in your cart</p>
+        </div>
+      </div>
+      <div class="container container-pad">
+        <div class="cart-layout">
+          <div>
+            ${items}
+            <div style="margin-top:1.5rem; display:flex; gap:.75rem; flex-wrap:wrap;">
+              <button class="btn-outline" data-nav="shop"><i class="fas fa-arrow-left" style="margin-right:.4rem;"></i> Continue Shopping</button>
+              <button id="clear-cart-btn" class="btn-outline" style="color:#e05; border-color:#e05;">
+                <i class="fas fa-trash" style="margin-right:.4rem;"></i> Clear Cart
+              </button>
+            </div>
+          </div>
+          <div>
+            <div class="order-summary-card">
+              <div class="os-title">Order Summary</div>
+              <div class="os-row"><span>Subtotal</span><span>$${subtotal}</span></div>
+              <div class="os-row"><span>Shipping</span><span>${shipping === 0 ? '<span style="color:#22c55e;">Free</span>' : "$" + shipping}</span></div>
+              ${subtotal < 99 ? `<p style="font-size:.78rem; color:var(--muted); margin:.25rem 0 .75rem;">Add $${99 - subtotal} more for free shipping</p>` : ""}
+              <hr class="os-divider">
+              <div class="os-total"><span>Total</span><span>$${total}</span></div>
+              <button class="btn-primary" style="width:100%;" data-nav="checkout">
+                Proceed to Checkout <i class="fas fa-arrow-right"></i>
+              </button>
+              <div style="display:flex; gap:.5rem; justify-content:center; margin-top:1rem; flex-wrap:wrap;">
+                ${["VISA", "MC", "AMEX", "PAYPAL"].map((b) => `<span style="background:#f3f4f6;border-radius:.3rem;padding:.2rem .5rem;font-size:.65rem;font-weight:700;color:#666;">${b}</span>`).join("")}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+        }
+
+        // --- WISHLIST ---
+        function pageWishlist() {
+            if (wishlist.length === 0)
+                return `
+      <div class="container container-pad">
+        <div class="wishlist-empty">
+          <i class="far fa-heart"></i>
+          <h2 style="font-family:'Playfair Display',serif; font-size:1.5rem; margin-bottom:.75rem;">Your wishlist is empty</h2>
+          <p style="color:var(--muted); margin-bottom:1.75rem;">Save items you love and come back to them anytime.</p>
+          <button class="btn-primary" data-nav="shop">Explore Products</button>
+        </div>
+      </div>`;
+            return `
+      <div class="page-header">
+        <div class="container">
+          <h1>My Wishlist</h1>
+          <p>${wishlist.length} saved item${wishlist.length !== 1 ? "s" : ""}</p>
+        </div>
+      </div>
+      <div class="container container-pad">
+        <div class="products-grid">
+          ${wishlist.map((p) => productCard(p)).join("")}
+        </div>
+      </div>`;
+        }
+
+        // --- CHECKOUT ---
+        function pageCheckout() {
+            let subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            const shipping = subtotal >= 99 ? 0 : 12;
+            const total = subtotal + shipping;
+            return `
+      <div class="page-header">
+        <div class="container">
+          <h1>Checkout</h1>
+          <p>Complete your order below</p>
+        </div>
+      </div>
+      <div class="container container-pad">
+        <div class="checkout-layout">
+          <form id="checkout-form">
+            <div class="checkout-form-card" style="margin-bottom:1.5rem;">
+              <div class="form-title">Shipping Information</div>
+              <div class="form-grid form-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="form-field">
+                  <label>First Name</label>
+                  <input class="form-input" type="text" placeholder="Jane" required>
+                </div>
+                <div class="form-field">
+                  <label>Last Name</label>
+                  <input class="form-input" type="text" placeholder="Doe" required>
+                </div>
+              </div>
+              <div class="form-field" style="margin-top:1rem;">
+                <label>Email Address</label>
+                <input class="form-input" type="email" placeholder="jane@example.com" required>
+              </div>
+              <div class="form-field" style="margin-top:1rem;">
+                <label>Shipping Address</label>
+                <input class="form-input" type="text" placeholder="123 Fashion Street, New York, NY 10001" required>
+              </div>
+              <div class="form-grid form-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem;">
+                <div class="form-field">
+                  <label>City</label>
+                  <input class="form-input" type="text" placeholder="New York" required>
+                </div>
+                <div class="form-field">
+                  <label>ZIP Code</label>
+                  <input class="form-input" type="text" placeholder="10001" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="checkout-form-card">
+              <div class="form-title">Payment Details</div>
+              <div class="form-field">
+                <label>Card Number</label>
+                <input class="form-input" type="text" placeholder="1234 5678 9012 3456" maxlength="19" required>
+              </div>
+              <div class="form-grid form-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem;">
+                <div class="form-field">
+                  <label>Expiry Date</label>
+                  <input class="form-input" type="text" placeholder="MM / YY" maxlength="7" required>
+                </div>
+                <div class="form-field">
+                  <label>CVV</label>
+                  <input class="form-input" type="text" placeholder="123" maxlength="4" required>
+                </div>
+              </div>
+              <div class="payment-icons">
+                ${["VISA", "MASTERCARD", "AMEX", "PAYPAL"].map((b) => `<span class="pay-icon">${b}</span>`).join("")}
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" style="margin-top:1.5rem; width:100%; padding:1rem; font-size:1rem;">
+              Place Order — $${total} <i class="fas fa-lock" style="font-size:.85rem;"></i>
+            </button>
+          </form>
+
+          <div>
+            <div class="order-summary-card">
+              <div class="os-title">Your Order (${cartCount()} items)</div>
+              ${cart
+                    .map(
+                        (item) => `
+              <div style="display:flex; gap:.75rem; margin-bottom:1rem; align-items:center;">
+                <img src="${item.img}" style="width:52px;height:65px;object-fit:cover;border-radius:.4rem;">
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:.85rem; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.name}</div>
+                  <div style="font-size:.75rem; color:var(--muted);">Qty: ${item.qty}</div>
+                </div>
+                <div style="font-weight:700; font-size:.9rem;">$${item.price * item.qty}</div>
+              </div>`,
+                    )
+                    .join("")}
+              <hr class="os-divider">
+              <div class="os-row"><span>Subtotal</span><span>$${subtotal}</span></div>
+              <div class="os-row"><span>Shipping</span><span>${shipping === 0 ? '<span style="color:#22c55e;">Free</span>' : "$" + shipping}</span></div>
+              <hr class="os-divider">
+              <div class="os-total"><span>Total</span><span>$${total}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+        }
+
+        // --- ABOUT ---
+        function pageAbout() {
+            return `
+      <div class="about-hero">
+        <div class="container">
+          <div class="story-container" style="max-width:48rem;margin:0 auto;text-align:center;">
+            <h1 class="about-title fade-up">Our Story</h1>
+            <p class="about-lead fade-up delay-1">ÉLARA was founded with a simple belief: great style shouldn't come at the cost of quality or the planet. We curate timeless pieces from responsible makers who share our commitment to craftsmanship and integrity.</p>
+          </div>
+        </div>
+      </div>
+      <div class="container container-pad">
+        <h2 class="section-title">Our Values</h2>
+        <div class="values-grid">
+          <div class="value-card fade-up">
+            <div class="value-icon">🌱</div>
+            <div class="value-title">Sustainable</div>
+            <p class="value-desc">Eco-friendly materials and ethical manufacturing processes. Every garment is made with respect for our planet.</p>
+          </div>
+          <div class="value-card fade-up delay-1">
+            <div class="value-icon">✂️</div>
+            <div class="value-title">Craftsmanship</div>
+            <p class="value-desc">Every piece is made with meticulous attention to detail and built to last beyond the trend cycle.</p>
+          </div>
+          <div class="value-card fade-up delay-2">
+            <div class="value-icon">🤝</div>
+            <div class="value-title">Inclusive</div>
+            <p class="value-desc">Fashion for every body, every story, every style. We celebrate diversity in all its forms.</p>
+          </div>
+        </div>
+
+        <div style="margin-top:4rem; background:var(--bg-secondary); border-radius:var(--radius-xl); padding:3rem; text-align:center;">
+          <h2 class="section-title" style="margin-bottom:1rem;">Our Impact</h2>
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; max-width:700px; margin:0 auto;">
+            <div><div class="stat-num">48k+</div><div class="stat-label">Happy Customers</div></div>
+            <div><div class="stat-num">92%</div><div class="stat-label">Sustainable Materials</div></div>
+            <div><div class="stat-num">12+</div><div class="stat-label">Countries Served</div></div>
+          </div>
+        </div>
+
+        <div style="margin-top:4rem;">
+          <h2 class="section-title">Meet the Team</h2>
+          <div class="team-grid">
+            ${TEAM.map(
+                (m) => `
+            <div class="team-card fade-up">
+              <img src="${m.img}" class="team-img" alt="${m.name}">
+              <div class="team-name">${m.name}</div>
+              <div class="team-role">${m.role}</div>
+            </div>`,
+            ).join("")}
+          </div>
+        </div>
+      </div>`;
+        }
+
+        // --- JOURNAL ---
+        function pageJournal() {
+            return `
+      <div class="page-header">
+        <div class="container">
+          <h1>Our Journal</h1>
+          <p>Style advice, sustainability stories, and trend reports.</p>
+        </div>
+      </div>
+      <div class="container container-pad">
+        <div class="journal-grid">
+          ${JOURNAL_POSTS.map(
+                (post) => `
+          <article class="journal-card fade-up">
+            <img src="${post.img}" class="journal-img" alt="${post.title}">
+            <div class="journal-body">
+              <div class="journal-tag">${post.tag}</div>
+              <div class="journal-title">${post.title}</div>
+              <p class="journal-excerpt">${post.excerpt}</p>
+              <div class="journal-meta">${post.date}</div>
+            </div>
+          </article>`,
+            ).join("")}
+        </div>
+
+        <div class="newsletter-banner fade-up" style="margin-top:3rem;">
+          <h2 class="banner-title">Get Stories in Your Inbox</h2>
+          <p class="banner-desc">Subscribe to receive the latest style guides and sustainability insights.</p>
+          <form id="nl-form-j" class="newsletter-form">
+            <input type="email" class="nl-input" placeholder="your@email.com" required>
+            <button type="submit" class="btn-accent">Subscribe</button>
+          </form>
+        </div>
+      </div>`;
+        }
+
+        // --- CONTACT ---
+        function pageContact() {
+            return `
+      <div class="page-header">
+        <div class="container">
+          <h1>Contact Us</h1>
+          <p>We'd love to hear from you. Reach out anytime.</p>
+        </div>
+      </div>
+      <div class="container container-pad">
+        <div class="contact-grid">
+          <div>
+            <h2 style="font-family:'Playfair Display',serif; font-size:1.75rem; margin-bottom:1.5rem;">Get in Touch</h2>
+            <div class="contact-info-item">
+              <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div>
+                <div class="contact-info-title">Our Studio</div>
+                <div class="contact-info-val">123 Fashion Avenue, New York, NY 10001</div>
+              </div>
+            </div>
+            <div class="contact-info-item">
+              <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+              <div>
+                <div class="contact-info-title">Email Us</div>
+                <div class="contact-info-val">hello@elarafashion.com</div>
+              </div>
+            </div>
+            <div class="contact-info-item">
+              <div class="contact-icon"><i class="fas fa-phone"></i></div>
+              <div>
+                <div class="contact-info-title">Call Us</div>
+                <div class="contact-info-val">+1 (212) 555-0192 — Mon–Fri, 9am–6pm ET</div>
+              </div>
+            </div>
+            <div class="contact-info-item">
+              <div class="contact-icon"><i class="fas fa-clock"></i></div>
+              <div>
+                <div class="contact-info-title">Business Hours</div>
+                <div class="contact-info-val">Monday–Friday: 9am–6pm<br>Saturday: 10am–4pm</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <form id="contact-form" class="checkout-form-card">
+              <div class="form-title">Send a Message</div>
+              <div class="form-grid form-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="form-field">
+                  <label>First Name</label>
+                  <input class="form-input" type="text" placeholder="Jane" required>
+                </div>
+                <div class="form-field">
+                  <label>Last Name</label>
+                  <input class="form-input" type="text" placeholder="Doe" required>
+                </div>
+              </div>
+              <div class="form-field" style="margin-top:1rem;">
+                <label>Email</label>
+                <input class="form-input" type="email" placeholder="jane@example.com" required>
+              </div>
+              <div class="form-field" style="margin-top:1rem;">
+                <label>Subject</label>
+                <input class="form-input" type="text" placeholder="How can we help?" required>
+              </div>
+              <div class="form-field" style="margin-top:1rem;">
+                <label>Message</label>
+                <textarea class="form-input" rows="5" placeholder="Tell us what's on your mind…" required></textarea>
+              </div>
+              <button type="submit" class="btn-primary" style="margin-top:1.25rem; width:100%;">
+                Send Message <i class="fas fa-paper-plane"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>`;
+        }
+
+        // --- ORDER SUCCESS ---
+        function pageOrderSuccess() {
+            return `
+      <div class="container container-pad">
+        <div class="order-confirm">
+          <div class="order-confirm-icon"><i class="fas fa-check"></i></div>
+          <h1 style="font-family:'Playfair Display',serif; font-size:2rem; margin-bottom:.75rem;">Order Confirmed!</h1>
+          <p style="color:var(--muted); max-width:30rem; margin:0 auto 2rem; line-height:1.7;">
+            Thank you for your purchase. You'll receive a confirmation email shortly with tracking details.
+          </p>
+          <button class="btn-primary" data-nav="home">Back to Home</button>
+          <div style="margin-top:1rem;">
+            <button class="btn-outline" data-nav="shop">Continue Shopping</button>
+          </div>
+        </div>
+      </div>`;
+        }
+
+        // ============================================================
+        //  MAIN RENDER
+        // ============================================================
+        function renderPage() {
+            let html = "";
+            switch (route.page) {
+                case "home":
+                    html = pageHome();
+                    break;
+                case "shop":
+                    html = pageShop();
+                    break;
+                case "product":
+                    html = pageProduct();
+                    break;
+                case "cart":
+                    html = pageCart();
+                    break;
+                case "wishlist":
+                    html = pageWishlist();
+                    break;
+                case "checkout":
+                    html = pageCheckout();
+                    break;
+                case "about":
+                    html = pageAbout();
+                    break;
+                case "journal":
+                    html = pageJournal();
+                    break;
+                case "contact":
+                    html = pageContact();
+                    break;
+                case "order":
+                    html = pageOrderSuccess();
+                    break;
+                default:
+                    html = pageHome();
+            }
+            document.getElementById("page-content").innerHTML = html;
+            attachPageEvents();
+            animateVisible();
+        }
+
+        function render() {
+            renderHeader();
+            renderPage();
+            renderFooter();
+        }
+
+        // ============================================================
+        //  ATTACH PAGE EVENTS
+        // ============================================================
+        function attachPageEvents() {
+            // Navigation
+            document.querySelectorAll("#page-content [data-nav]").forEach((el) => {
+                el.addEventListener("click", () => nav(el.dataset.nav));
+            });
+            document
+                .querySelectorAll("#page-content [data-nav-product]")
+                .forEach((el) => {
+                    el.addEventListener("click", () =>
+                        nav("product", { id: el.dataset.navProduct }),
+                    );
+                });
+
+            // Cart actions
+            document.querySelectorAll("[data-addcart]").forEach((btn) => {
+                btn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    const p = PRODUCTS.find((x) => x.id === btn.dataset.addcart);
+                    if (p) addToCart(p);
+                });
+            });
+            document.querySelectorAll("[data-wish]").forEach((btn) => {
+                btn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    const p =
+                        PRODUCTS.find((x) => x.id === btn.dataset.wish) ||
+                        wishlist.find((x) => x.id === btn.dataset.wish);
+                    if (p) toggleWish(p);
+                });
+            });
+            document.querySelectorAll("[data-qty-up]").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const id = btn.dataset.qtyUp,
+                        i = cart.find((x) => x.id === id);
+                    if (i) setQty(id, i.qty + 1);
+                });
+            });
+            document.querySelectorAll("[data-qty-down]").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const id = btn.dataset.qtyDown,
+                        i = cart.find((x) => x.id === id);
+                    if (i) setQty(id, i.qty - 1);
+                });
+            });
+            document.querySelectorAll("[data-remove]").forEach((btn) => {
+                btn.addEventListener("click", () => removeCart(btn.dataset.remove));
+            });
+            document
+                .getElementById("clear-cart-btn")
+                ?.addEventListener("click", () => {
+                    cart = [];
+                    saveCart();
+                    renderPage();
+                    renderHeader();
+                    showToast("Cart cleared");
+                });
+
+            // Category / sort (shop sidebar)
+            document.querySelectorAll("[data-shop-cat]").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    shopCat = btn.dataset.shopCat;
+                    drawerOpen = false;
+                    renderPage();
+                });
+            });
+            document.querySelectorAll("[data-sort]").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    shopSort = btn.dataset.sort;
+                    drawerOpen = false;
+                    renderPage();
+                });
+            });
+
+            // Mobile filter drawer
+            document
+                .getElementById("filter-open-btn")
+                ?.addEventListener("click", () => {
+                    drawerOpen = true;
+                    renderPage();
+                });
+            document
+                .getElementById("drawer-close-btn")
+                ?.addEventListener("click", () => {
+                    drawerOpen = false;
+                    renderPage();
+                });
+            document
+                .getElementById("drawer-overlay")
+                ?.addEventListener("click", () => {
+                    drawerOpen = false;
+                    renderPage();
+                });
+            document
+                .getElementById("mobile-sort-sel")
+                ?.addEventListener("change", (e) => {
+                    shopSort = e.target.value;
+                    renderPage();
+                });
+
+            // Forms
+            document.getElementById("nl-form")?.addEventListener("submit", (e) => {
+                e.preventDefault();
+                showToast("Subscribed! Check your inbox 📬");
+                e.target.reset();
+            });
+            document
+                .getElementById("nl-form-j")
+                ?.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    showToast("Subscribed! Check your inbox 📬");
+                    e.target.reset();
+                });
+            document
+                .getElementById("contact-form")
+                ?.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    showToast("Message sent! We'll be in touch soon 💌");
+                    e.target.reset();
+                });
+            document
+                .getElementById("checkout-form")
+                ?.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    cart = [];
+                    saveCart();
+                    nav("order");
+                });
+
+            // Breadcrumb nav
+            document.querySelectorAll(".breadcrumb [data-nav]").forEach((el) => {
+                el.addEventListener("click", () => nav(el.dataset.nav));
+            });
+            document
+                .getElementById("pd-go-back")
+                ?.addEventListener("click", () => nav("shop"));
+        }
+
+        // ============================================================
+        //  SCROLL ANIMATIONS
+        // ============================================================
+        function animateVisible() {
+            const els = document.querySelectorAll(
+                ".fade-up, .fade-left, .fade-right",
+            );
+            const io = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((e) => {
+                        if (e.isIntersecting) {
+                            e.target.classList.add("vis");
+                            io.unobserve(e.target);
+                        }
+                    });
+                },
+                { threshold: 0.12, rootMargin: "0px 0px -30px 0px" },
+            );
+            els.forEach((el) => io.observe(el));
+            // Immediate check for already-visible elements
+            setTimeout(() => {
+                els.forEach((el) => {
+                    const r = el.getBoundingClientRect();
+                    if (r.top < window.innerHeight - 50) {
+                        el.classList.add("vis");
+                        io.unobserve(el);
+                    }
+                });
+            }, 80);
+        }
+
+        // ============================================================
+        //  BOOT
+        // ============================================================
+        render();
+    </script>
+</body>
+
+</html>
+    
